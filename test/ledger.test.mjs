@@ -108,7 +108,8 @@ test('路径围栏：工作区外输入被拒绝，工作区内正常', () => {
   const cwd = process.cwd()
   const inside = resolveInputPath(cwd, path.join(cwd, 'test', 'fixtures', 'sample-2page.pdf'))
   assert.ok(path.isAbsolute(inside))
-  assert.throws(() => resolveInputPath(cwd, 'C:\\Windows\\win.ini'), /PATH_OUTSIDE_WORKSPACE|路径/)
-  assert.equal(assertInside(cwd, 'C:\\Windows\\win.ini'), false)
+  const outside = process.platform === 'win32' ? 'C:\\Windows\\win.ini' : '/etc/passwd'
+  assert.throws(() => resolveInputPath(cwd, outside), /PATH_OUTSIDE_WORKSPACE|路径/)
+  assert.equal(assertInside(cwd, outside), false)
   assert.doesNotThrow(() => assertInside(cwd, path.join(cwd, 'lib')))
 })

@@ -3,7 +3,8 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
 
 import { buildNotebook, notebookJson, executeNotebook } from '../lib/render/ipynb.mjs'
-import { PYTHON, ROOT, tmpDir } from './helpers/env.mjs'
+import { run } from '../lib/runner.mjs'
+import { PYTHON, PYTHON_ENV, ROOT, tmpDir } from './helpers/env.mjs'
 
 const PY_DIR = `${ROOT}/py`
 
@@ -120,6 +121,12 @@ test('buildNotebook 合并连续 markdown、忽略空单元并稳定序列化', 
 })
 
 test('executeNotebook 捕获输出、表达式、错误并继续执行', async (t) => {
+  const numpy = await run(PYTHON, ['-c', 'import numpy'], { env: PYTHON_ENV, timeoutMs: 60000 })
+  if (numpy.code !== 0) {
+    t.skip('requires numpy')
+    return
+  }
+
   const dir = tmpDir('ipynb-exec')
   t.after(() => fs.rm(dir, { recursive: true, force: true }))
 

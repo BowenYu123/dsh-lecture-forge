@@ -139,6 +139,12 @@ print(json.dumps({"types": results, "rejected": rejected, "unknown": unknown}, e
 }
 
 test('lecturekit.plot 渲染多种图形为自包含 SVG', async (t) => {
+  const numpy = await run(PYTHON, ['-c', 'import numpy'], { env: PYTHON_ENV, timeoutMs: 60000 })
+  if (numpy.code !== 0) {
+    t.skip('requires numpy')
+    return
+  }
+
   const dir = tmpDir('lecturekit-plot')
   t.after(() => fs.rm(dir, { recursive: true, force: true }))
 
