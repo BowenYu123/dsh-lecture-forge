@@ -1,5 +1,9 @@
 # dsh-lecture-forge
 
+[![CI](https://github.com/BowenYu123/dsh-lecture-forge-/actions/workflows/ci.yml/badge.svg)](https://github.com/BowenYu123/dsh-lecture-forge-/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](package.json)
+
 把**论文、教材、讲义、网页或扫描件**变成一份**全覆盖、可追溯、带推导、配图与可运行代码**的学习讲义，并导出 PDF / HTML / ipynb / Markdown。
 
 面向数学、物理、计算机、工程等需要公式推导、作图、算法或数值实验的学科。
@@ -225,9 +229,21 @@ assets/
 skills/lecture-forge/    技能正文与参考资料
 ```
 
+## 贡献
+
+欢迎提交 issue 与 pull request。改动后请先跑：
+
+```bash
+npm test
+```
+
+CI 会在 macOS 与 Ubuntu 上运行同一套测试（需要 numpy 的用例在缺少 numpy 时自动跳过）。
+
 ## 许可
 
-插件代码：随 DSH 使用。内置第三方资产各自保留原许可：KaTeX（MIT）、markdown-it（MIT）、pypdf（BSD-3-Clause），见各目录 LICENSE。
+本项目以 [MIT License](LICENSE) 开源，Copyright (c) 2026 Bowen Yu。
+
+内置第三方资产各自保留原许可：KaTeX（MIT）、markdown-it（MIT）、pypdf（BSD-3-Clause），见各目录 LICENSE。
 
 ## 参考技能
 

@@ -5,6 +5,15 @@
   "description": "LectureForge：把论文、教材、讲义与网页资料转成全覆盖、可追溯、带推导与配图的学习讲义（PDF / HTML / ipynb / Markdown）。",
   "type": "module",
   "main": "index.js",
+  "author": "Bowen Yu",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BowenYu123/dsh-lecture-forge-.git"
+  },
+  "homepage": "https://github.com/BowenYu123/dsh-lecture-forge-#readme",
+  "bugs": {
+    "url": "https://github.com/BowenYu123/dsh-lecture-forge-/issues"
+  },
   "exports": {
     ".": "./index.js",
     "./cordis.patch.yml": "./cordis.patch.yml",
