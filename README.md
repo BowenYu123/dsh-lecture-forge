@@ -19,8 +19,11 @@
 
 本插件是 Host-only bundle，无前端、无 npm 依赖（运行时资产已内置）。
 
-```powershell
-# 在 DSH 中（需要审批）
+```bash
+# 在 DSH 中（需要审批）；把 target 换成插件目录的真实路径
+# macOS / Linux
+plugin_manager install_bundle target="/Users/<you>/dsh-lecture-forge"
+# Windows
 plugin_manager install_bundle target="C:\ds_workzone\讲义生成插件"
 ```
 
@@ -91,7 +94,7 @@ claim 字段：`blockId`、`status`（`covered|merged|blocked|pending`）、`sec
 
 ### `lecture_build`
 
-导出 `pdf` / `html` / `ipynb` / `md`。会先拒绝：未映射素材块、公式解析错误、未登记图片（`allowIncomplete:true` 仅用于草稿预览）。PDF 用无头 Edge 打印，随后用 LibreOffice Kit 渲染 QA 页图。
+导出 `pdf` / `html` / `ipynb` / `md`。会先拒绝：未映射素材块、公式解析错误、未登记图片（`allowIncomplete:true` 仅用于草稿预览）。PDF 用无头浏览器（Windows 的 Edge/Chrome，macOS 的 Chrome/Chromium）打印，随后用 LibreOffice Kit 渲染 QA 页图。
 
 ### `lecture_verify`
 
@@ -161,7 +164,7 @@ $$ \frac{\partial F}{\partial y} - \frac{d}{dx}\frac{\partial F}{\partial y'} = 
 | `qaDpi` | 144 | QA 页图分辨率 |
 | `keepRawSources` | true | 保留原始素材副本 |
 
-运行时自动探测：DSH 自带 Python（含 numpy/Pillow）、Edge、LibreOffice Kit。缺什么会在 `lecture_init` 的 warnings 里说明。
+运行时自动探测：DSH 自带 Python（含 numpy/Pillow）、无头浏览器（Windows Edge/Chrome，macOS/Linux Chrome/Chromium）、LibreOffice Kit。缺什么会在 `lecture_init` 的 warnings 里说明。
 
 ## 数据与目录
 
@@ -188,11 +191,11 @@ $$ \frac{\partial F}{\partial y} - \frac{d}{dx}\frac{\partial F}{\partial y'} = 
 - v1 不导出 DOCX/PPTX；渲染器有注册表，后续可扩展。
 - 没有图像生成模型：概念示意图由 Agent 写 SVG，函数图由 numpy 绘制。
 - 扫描页依赖 Agent 视觉识别（`read_image` / `modlens_read_image`），识别质量决定覆盖质量；低置信页必须人工/视觉复核。
-- PDF 由 Edge 打印，分页与字体取决于本机 Edge；中文需要系统字体。
+- PDF 由无头浏览器打印（Windows 用 Edge/Chrome，macOS 用 Chrome/Chromium），分页与字体取决于所用浏览器与本机字体；中文需要系统字体。
 
 ## 开发
 
-```powershell
+```bash
 node --test --test-timeout=180000 "test/**/*.test.mjs"
 ```
 

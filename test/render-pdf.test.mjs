@@ -5,36 +5,41 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import path from 'node:path'
-import { tmpDir } from './helpers/env.mjs'
+import { fixture, tmpDir } from './helpers/env.mjs'
 import { printHtmlToPdf } from '../lib/render/pdf.mjs'
 import { renderPdfPages } from '../lib/render/qa.mjs'
 import { renderMath, katexCss } from '../lib/render/math.mjs'
 
-const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe'
-const CHROME = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
-const BROWSER = [EDGE, CHROME].find((candidate) => fs.existsSync(candidate)) ?? null
+const BROWSER_CANDIDATES =
+  process.platform === 'win32'
+    ? [
+        'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+        'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      ]
+    : process.platform === 'darwin'
+      ? [
+          '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+          '/Applications/Chromium.app/Contents/MacOS/Chromium',
+        ]
+      : ['/usr/bin/microsoft-edge', '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser']
+const BROWSER = BROWSER_CANDIDATES.find((candidate) => fs.existsSync(candidate)) ?? null
 
-const RESOURCES = process.env.DSH_RESOURCES
-  || 'C:\\Users\\ybw14\\AppData\\Local\\Programs\\DeepSeek Harness\\resources'
-const KIT_CLI = path.join(
-  RESOURCES,
-  'app.asar.unpacked',
-  'dsh',
-  'node_modules',
-  '@deepseek-ai',
-  'libreoffice-kit',
-  'lib',
-  'cli.js',
-)
-const KIT_NODE = path.join(
-  RESOURCES,
-  'runtime',
-  'primary-runtime',
-  'dependencies',
-  'node',
-  'bin',
-  'node.exe',
-)
+const RESOURCES = process.env.DSH_RESOURCES || process.resourcesPath || null
+const KIT_CLI = RESOURCES
+  ? path.join(RESOURCES, 'app.asar.unpacked', 'dsh', 'node_modules', '@deepseek-ai', 'libreoffice-kit', 'lib', 'cli.js')
+  : null
+const KIT_NODE = RESOURCES
+  ? path.join(
+      RESOURCES,
+      'runtime',
+      'primary-runtime',
+      'dependencies',
+      'node',
+      'bin',
+      process.platform === 'win32' ? 'node.exe' : 'node',
+    )
+  : null
 
 const MATH = renderMath('\\int_0^1 x^2\\,dx = \\frac{1}{3}', { display: true })
 
@@ -65,7 +70,7 @@ let pdfPath = null
 
 test('printHtmlToPdf：Chromium/Edge 生成有效 PDF', { timeout: 180000 }, async (t) => {
   if (!BROWSER) {
-    t.skip('未找到 msedge/chrome，跳过浏览器打印测试。')
+    t.skip('未找到 Edge/Chrome/Chromium，跳过浏览器打印测试。')
     return
   }
 
@@ -92,10 +97,16 @@ test('printHtmlToPdf：Chromium/Edge 生成有效 PDF', { timeout: 180000 }, asy
 
 test('renderPdfPages：LibreOffice Kit 渲染 PDF 第 1 页为 PNG', { timeout: 180000 }, async (t) => {
   if (!pdfPath || !fs.existsSync(pdfPath)) {
-    t.skip('PDF 未生成，跳过页面渲染测试。')
-    return
+    // 没有浏览器时用内置两页样例 PDF，保证 Kit 渲染路径在 macOS/Linux 上也被执行。
+    const sample = fixture('sample-2page.pdf')
+    if (!fs.existsSync(sample)) {
+      t.skip('PDF 未生成且缺少样例 PDF，跳过页面渲染测试。')
+      return
+    }
+    pdfPath = sample
+    workDir = workDir ?? tmpDir('render-qa')
   }
-  if (!fs.existsSync(KIT_CLI)) {
+  if (!KIT_CLI || !fs.existsSync(KIT_CLI)) {
     t.skip(`缺少 LibreOffice Kit cli：${KIT_CLI}`)
     return
   }
@@ -107,7 +118,7 @@ test('renderPdfPages：LibreOffice Kit 渲染 PDF 第 1 页为 PNG', { timeout: 
     outDir,
     pages: [1],
     dpi: 144,
-    kit: { node, cli: KIT_CLI },
+    kit: { node, cli: KIT_CLI, electronAsNode: node === process.execPath && Boolean(process.versions.electron) },
   })
 
   assert.equal(result.ok, true, `页面渲染失败：${result.message ?? JSON.stringify(result)}`)
