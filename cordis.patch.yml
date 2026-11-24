@@ -1,0 +1,6 @@
+# dsh-lecture-forge bundle patch：把 LectureForge 插件行插入 profile 的插件清单。
+# 入口行必须写包名（而不是相对源码路径），loader 才能按包名解析到 package.json#main。
+# 技能由包入口 index.js 通过 ctx.skills.register() 注册，不在此处单独挂载。
+- insert:
+    - id: dsh-lecture-forge
+      name: '@local/dsh-lecture-forge'

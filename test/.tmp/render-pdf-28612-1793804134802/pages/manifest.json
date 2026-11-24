@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "backend": "native",
+  "rasterEngine": "pdfium",
+  "source": "saved",
+  "inputPath": "C:\\ds_workzone\\讲义生成插件\\test\\.tmp\\render-pdf-28612-1793804134802\\lecture.pdf",
+  "sourceSha256": "769e876e17f2131e61423ae648048ff6d23f9af765c083b38bbbb7359f8122e3",
+  "dpi": 144,
+  "pageCount": 1,
+  "images": [
+    {
+      "index": 1,
+      "page": 1,
+      "path": "C:\\ds_workzone\\讲义生成插件\\test\\.tmp\\render-pdf-28612-1793804134802\\.pages.stage-mw28o2mj-n4j4so\\page-0001.png",
+      "width": 1224,
+      "height": 1584,
+      "rectangle": {
+        "x": 0,
+        "y": 0,
+        "width": 816,
+        "height": 1056
+      },
+      "byteLength": 36708
+    }
+  ],
+  "missingFonts": []
+}

@@ -1,0 +1,50 @@
+{
+  "name": "@local/dsh-lecture-forge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LectureForge：把论文、教材、讲义与网页资料转成全覆盖、可追溯、带推导与配图的学习讲义（PDF / HTML / ipynb / Markdown）。",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "icon.svg",
+    "cordis.patch.yml",
+    "lib",
+    "py",
+    "skills",
+    "assets/css",
+    "assets/vendor",
+    "locale",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "icon": "./icon.svg",
+  "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "lecture",
+    "notes",
+    "study",
+    "latex",
+    "katex"
+  ],
+  "scripts": {
+    "test": "node --test --test-timeout=180000 \"test/**/*.test.mjs\""
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "manifestVersion": 1
+  }
+}

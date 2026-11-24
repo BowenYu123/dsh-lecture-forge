@@ -1,0 +1,4 @@
+﻿{
+  "//": "Scope override for the plugin (root package.json sets type=module): KaTeX's UMD build must be loaded as CommonJS so createRequire() in lib/render/math.mjs returns the katex object.",
+  "type": "commonjs"
+}
