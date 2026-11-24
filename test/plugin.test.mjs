@@ -67,6 +67,16 @@ test('apply：注册 7 个 lecture_* 工具与 lecture-forge 技能', () => {
   assert.equal(skill.resourceBase.kind, 'directory')
 })
 
+test('lecture_figure：plot spec 说明与 schema 一致（series）', () => {
+  const { ctx, tools } = makeContext()
+  apply(ctx, {})
+  const figure = tools.find((tool) => tool.name === 'lecture_figure')
+  const spec = figure.parameters.properties.spec
+  assert.match(spec.description, /series/)
+  assert.equal(spec.properties.series.type, 'array')
+  assert.ok(!spec.description.includes('x:[...], y:[...]'), '不应再出现顶层 x/y 的错误示例')
+})
+
 test('Config：未知键与非法类型被拒绝', async () => {
   const { resolveConfig, ConfigError } = await import('../lib/config.mjs')
   assert.throws(() => resolveConfig({ nope: 1 }), (error) => error instanceof ConfigError)

@@ -247,3 +247,34 @@ test('renderMarkdown：报告使用而不是猜测', () => {
   assert.deepEqual(analysis.markers, standalone.markers)
   assert.deepEqual(analysis.callouts, standalone.callouts)
 })
+
+test('analyzeMarkdown：图注含方括号（区间）时仍能识别', () => {
+  const analysis = analyzeMarkdown('![y = x² 在 [-2, 2] 上的曲线](assets/fig-005.svg){#fig-5 width=80%}')
+  assert.equal(analysis.figures.length, 1)
+  assert.deepEqual(
+    {
+      assetId: analysis.figures[0].assetId,
+      id: analysis.figures[0].id,
+      caption: analysis.figures[0].caption,
+      path: analysis.figures[0].path,
+      width: analysis.figures[0].width,
+    },
+    {
+      assetId: 'fig-005',
+      id: 'fig-5',
+      caption: 'y = x² 在 [-2, 2] 上的曲线',
+      path: 'assets/fig-005.svg',
+      width: '80%',
+    },
+  )
+})
+
+test('renderMarkdown：图注含方括号时正常生成 figure 且不残留属性', () => {
+  const { html, warnings } = renderMarkdown('![区间 [-1, 1] 上的函数](assets/fig-005.svg){#fig-5 width=60%}')
+  assert.ok(
+    html.includes(
+      '<figure class="lf-figure" id="fig-5"><img src="assets/fig-005.svg" style="width:60%"><figcaption>图 1：区间 [-1, 1] 上的函数</figcaption></figure>',
+    ),
+  )
+  assert.deepEqual(warnings, [])
+})

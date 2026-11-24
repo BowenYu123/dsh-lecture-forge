@@ -87,6 +87,15 @@ $$ {#eq-mean}
 ![正弦与余弦](assets/fig-001.svg){#fig-001 width=80%}
 ```
 
+绘图 spec（`lecture_figure` 的 `plot`）示例：
+
+```json
+{"type":"line","series":[{"x":[0,1,2,3],"y":[0,1,4,9],"label":"平方"}],"title":"y = x²","xlabel":"x","ylabel":"y"}
+```
+
+- `line` / `scatter` 用 `series:[{x,y,label?}]`；`parametric` 用 `series:[{t0,t1,fx,fy,label?}]`；
+- `vector_field` 用 `xrange, yrange, u, v`；`heatmap` / `contour` 用 `f, xrange, yrange`（`f/u/v` 为受限表达式，详见 `py/lecturekit/README.md`）。
+
 - 路径固定 `assets/<文件名>`；`lecture_figure` 返回的 `markdown` 字段可直接粘贴。
 - `{#fig-001}` 是图锚点：**必须与 figures.json 里的 assetId 一致**（`fig-001` 对应 `assets/fig-001.svg|png`），否则审计报 `FIGURE_UNREGISTERED`。
 - `width=` 只接受百分比（`60%`/`80%`），缺省 80%。
